@@ -3,9 +3,24 @@ version: "2"
 services:
   web:
     build: .
-    command: npm run start:debug
+    command: npm run start:dev
     volumes:
       - .:/usr/src/app
     ports:
       - "5000:5000"
       - "9229:9229"
+    depends_on:
+      - "db"
+    links:
+      - "db"
+    environment:
+      DB_CONNECTION_STRING: "mysql://root:secret@db:3306/sample"
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: sample
+      MYSQL_USER: sampleuser
+      MYSQL_PASSWORD: password
+    ports:
+    - "3306:3306"
